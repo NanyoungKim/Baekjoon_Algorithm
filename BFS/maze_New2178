@@ -1,0 +1,139 @@
+#include <iostream>
+#include <queue>
+#include <utility>
+
+
+using namespace std;
+
+
+int N,M;
+
+pair<int, int> idx;
+queue<pair<int,int> > q;
+
+
+
+
+bool Inside(int a, int b){
+    
+    if((a >=0 && a < N) && (b >= 0 && b < M)){
+        return true;
+    }
+    else{
+        return false;
+    }
+   
+}
+
+
+
+void bfs (int **maze, int **cnt, int**visit, int _r, int _c){
+    
+    
+
+    int move[4][2] = {
+        {-1,0}, //위
+        {1,0},//아래
+        {0,-1},//왼
+        {0,1}//오른
+    };
+    
+    
+   // int curRow = _r;
+   // int curCol = _c;
+    
+    while(!q.empty()){
+
+        
+        for(int i=0; i<4; i++){
+            
+            //위 0,0 / 아래 1,0 / 왼/ 오
+            int curRow = _r + move[i][0];
+            int curCol = _c + move[i][1];
+            
+            
+            
+            
+            if((Inside(curRow, curCol) == true) && (visit[curRow][curCol] == 0) && (maze[curRow][curCol] == 1)){
+                
+                
+                q.push(make_pair(curRow,curCol));
+                cnt[curRow][curCol] = cnt[_r][_c] + 1;
+                visit[curRow][curCol] = 1;
+                
+            }
+            
+        }   //for 4번
+        
+        
+        
+        
+        
+        q.pop();
+        if(q.empty() == false){
+            _r = q.front().first;
+            _c = q.front().second;
+        }
+       
+
+        
+    }   //while
+    cout << cnt[N-1][M-1] << endl;
+   
+    
+}
+
+
+
+
+
+int main() {
+    
+   
+    cin >> N >> M;
+    
+    //int curRow = 0;
+    //int curCol = 0;
+    
+    
+    int **mazeArr = new int*[N];            //2차원 배열 동적배열 선언
+    int **cntArr = new int*[N];
+    int **visitedArr = new int*[N];
+    for(int i=0; i<N; ++i){
+        mazeArr[i] = new int[M];            //초기화
+        cntArr[i] = new int[M];
+        visitedArr[i] = new int[M];
+    }
+    
+    
+    
+    for(int i=0; i<N; i++){
+        for(int j=0; j<M; j++){
+            
+            scanf("%1d", &mazeArr[i][j]);
+            //cin >> mazeArr[i][j];           //갈 수 있는 길 입력
+            cntArr[i][j] = 0;               //카운트 초기 값은 0으로
+            visitedArr[i][j] = 0;
+        }
+    }
+    
+    cntArr[0][0] = 1;                       //시작지점은 1로 시작
+    visitedArr[0][0] = 1;
+    
+    
+    
+    
+   
+    q.push(make_pair(0,0));
+    bfs(mazeArr, cntArr,visitedArr, 0, 0);
+    
+    
+    
+    
+    
+    
+    
+    
+    return 0;
+}
+
